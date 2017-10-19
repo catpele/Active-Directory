@@ -5,8 +5,8 @@
 # Variables
 $today = Get-Date
 $timestamp = Get-Date -Format ddMMyyy
-$path = "C:\Tools\CleanADAccounts-Logs\clean-"+$timestamp+".txt"
-$logfolder = "C:\Tools\CleanADAccounts-Logs"
+$path = "C:\Scripts\Logs\ad-clean-users-"+$timestamp+".txt"
+$logfolder = "C:\Scripts\Logs"
 $annual = $today.AddDays(-365)
 $limit = $today.AddDays(-90)
 $expiredusers = Search-ADAccount -AccountDisabled -UsersOnly | get-aduser -Properties whenChanged | where {$_.Name -notlike "*Template" -AND $_.Name -notlike "Guest" -AND $_.Name -notlike "krbtgt"}
@@ -45,4 +45,4 @@ Stop-Transcript
 Get-ChildItem $logfolder | Where-Object {$_.LastWriteTime -lt $annual} | Remove-Item
 
 # Emails the daily log to IT
-Send-MailMessage -SmtpServer eve.giffgaff.co.uk -From "scanner@giffgaff.co.uk" -Subject "AD Account Cleanup" -To "itsupport@giffgaff.co.uk" -Attachments $path
+Send-MailMessage -SmtpServer <emailserver> -From "<emailsender>" -Subject "AD Account Cleanup" -To "<emailrecipient>" -Attachments $path
